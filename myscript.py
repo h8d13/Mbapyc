@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 #myscript.py
-
 import numpy as np
 import sys as sus
 import os
@@ -39,7 +38,8 @@ print(result)
 ## But we can use pid os.fork() to circumvent this which would still correctly capture exits.
 
 c_code = _read_code("bitcount.c") 
-exe_path, tmp_dir = _tmpile_c(c_code)
+
+exe_path, tmp_dir = _tmpile_c(c_code, flags=["-O2", "-fPIC"])
 
 pid = os.fork()
 if pid == 0:
@@ -54,10 +54,10 @@ else:
 
 ## If we do want to use return x; 
 ## Then we do not need to fork at all.
-
-## Define runtime
+## Define runtime and run and cpature exit
 
 #rt = ctypes.CDLL(exe_path)
 #rt.run.restype = ctypes.c_int
 #exit_code = rt.run()
 #print("C function returned", exit_code)
+
