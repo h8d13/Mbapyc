@@ -11,7 +11,7 @@ from tmpiler import _envir, _tmpile_c, _read_code, tmp_dir
 _envir()
 
 #########################################################
-## Do some python work
+## Do some Python work
 
 def Fibon(r, c):
     seq = [0, 1]
@@ -23,31 +23,37 @@ result = Fibon(3, 4)
 print(result)
 
 #########################################################
-## Do some C work
+## Do some C work (But modify it using Python)
+## See tmpiler implemetation
 ## Limititations: exit(0); vs return 0; 
 ## As the first, would also stop our python process: 
 ## But we can use pid multi-processing to circumvent this which would still correctly capture exits.
 
 c_code = _read_code("bitcount.c") 
+## Load example code
 exe_path, tmp_dir = _tmpile_c(c_code, flags=["-O2", "-fPIC"])
+## Compile to tmp
 
 def run_c():
     ctypes.CDLL(exe_path).run()
-
+## Run it in mp so we dont have to use fork
 p = mp.Process(target=run_c)
 p.start()
 p.join()
 print("Child exited with code", p.exitcode)
 
-## Clean-up
-shutil.rmtree(tmp_dir) 
-#########################################################
-
 ## If we do want to use return x; 
-## Then we do not need to fork at all.
-## Define runtime and run and capture exit
+## Then we do not need to fork/multiprocess at all.
+## Define runtime, run and capture exit
 
 #rt = ctypes.CDLL(exe_path)
 #rt.run.restype = ctypes.c_int
 #exit_code = rt.run()
 #print("C function returned", exit_code)
+
+## If you did not change bitcount.c to return 0; 
+## Then you will be left with a temp folder. Becaue part bellow will never be reached.
+
+## Clean-up
+shutil.rmtree(tmp_dir) 
+#########################################################

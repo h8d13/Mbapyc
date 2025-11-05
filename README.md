@@ -7,3 +7,7 @@ A mix of bash, python and C.
 - Check executable is actually using venv, also elevated True/False.
 
 - Build temp `.so` files, modify on the fly, build using `gcc`, run and clean-up, exit.
+
+---
+
+Heavily inspired by weird shananigans when watching @TSCoding on YT.
