@@ -2,4 +2,4 @@
 
 ./pya_venv
 
-./.venv/bin/python3 myscript.py
+./.venv/bin/python3 -B myscript.py

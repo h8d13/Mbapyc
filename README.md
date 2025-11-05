@@ -69,5 +69,6 @@ Bit count: 28
 Bit count: 29
 Bit count: 30
 Bit count: 31
-Reached 32 bits. Exiting.
+Reached bit 32 — exit delimiter triggered.
+child exited with status 0
 ```

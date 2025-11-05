@@ -1,0 +1,27 @@
+import os
+import tempfile as tf
+import subprocess as sp
+import shutil
+
+tmp = tf.mkdtemp(dir=os.getcwd())
+
+def _tmpile_c(c_code, work_dir=None, so_name="bitcount.so"):
+    """
+    Compile C code into a shared library (.so) in a temporary directory.
+    
+    Returns:
+        exe_path (str): Path to the compiled shared library.
+        tmp_dir (str): Path to the temporary directory for cleanup.
+    """
+    tmp_dir = tf.mkdtemp(dir=work_dir)
+    c_path = os.path.join(tmp_dir, "bitcount.c")
+    exe_path = os.path.join(tmp_dir, so_name)
+
+    with open(c_path, "w") as f:
+        f.write(c_code)
+
+    sp.run(["gcc", "-shared", "-fPIC", c_path, "-o", exe_path], check=True)
+    
+    shutil.rmtree(tmp) 
+
+    return exe_path, tmp_dir

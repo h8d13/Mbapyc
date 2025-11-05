@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 
 import numpy as np
-
 import sys as sus
 import os
+import tempfile as tf
+import ctypes, shutil
+
+from tmpiler import _tmpile_c, tmp
 
 is_admin = None
 is_venv = sus.prefix != getattr(sus, "base_prefix", sus.prefix)
@@ -30,26 +33,41 @@ print(result)
 
 #########################################################
 
-import tempfile, subprocess, ctypes, shutil
+# Limititations: exit(0); vs return 0; 
+# As the first would also stop our python process: 
+# But we can use pid os.fork() to circumvent this which would still correctly capture exits.
 
-c_code = r"""
+c_code = r'''
 #include <stdio.h>
+#include <stdlib.h>
+
 int run() {
-    for (int i = 0; i < 32; i++)
-        printf("Bit count: %d\n", i);
-    printf("Reached 32 bits. Exiting.\n");
-    return 0;
+    const int MAX_BITS = 32;
+    for (int bit = 0; bit < MAX_BITS; bit++)
+        printf("BC: %d\n", bit);
+    printf("Reached bit %d — exit delimiter triggered.\n", MAX_BITS);
+    exit(0); // instead of return 0;
 }
-"""
+'''
 
-tmpdir = tempfile.mkdtemp(dir=os.getcwd())
+exe_path, tmp_dir = _tmpile_c(c_code)
 
-c_path = os.path.join(tmpdir, "bitcount.c")
-so_path = os.path.join(tmpdir, "bitcount.so")
+pid = os.fork()
+if pid == 0:
+    # child
+    ctypes.CDLL(exe_path).run()
+    os._exit(0)  # ensure child exits successfully eitherway
+else:
+    # parent
+    _, status = os.waitpid(pid, 0)
+    exit_code = os.WEXITSTATUS(status)
+    print("Child exited with code", exit_code) # but still capture actual return code
 
-with open(c_path, "w") as f:
-    f.write(c_code)
+# If we do want to use return x; 
+# Then we do not need to fork at all.
 
-subprocess.run(["gcc", "-shared", "-fPIC", c_path, "-o", so_path], check=True)
-ctypes.CDLL(so_path).run()
-shutil.rmtree(tmpdir)
+## Define runtime
+#rt = ctypes.CDLL(exe_path)
+#rt.run.restype = ctypes.c_int
+#exit_code = rt.run()
+#print("C function returned", exit_code)
