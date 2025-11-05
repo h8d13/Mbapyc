@@ -28,12 +28,11 @@ print(result)
 ## Limititations: exit(0); vs return 0; 
 ## As the first, would also stop our python process: 
 ## But we can use pid multi-processing to circumvent this which would still correctly capture exits.
-
-c_code = _read_code("bitcount.c") 
+in_d="./in"
+c_code = _read_code(f"{in_d}/bitcount.c") 
 ## Load example code
 exe_path, tmp_dir = _tmpile_c(c_code, flags=["-O2", "-fPIC"])
 ## Compile to tmp
-
 def run_c():
     ctypes.CDLL(exe_path).run()
 ## Run it in mp so we dont have to use fork
