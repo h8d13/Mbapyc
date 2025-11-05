@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#myscript.py
 
 import numpy as np
 import sys as sus
@@ -6,7 +7,7 @@ import os
 import tempfile as tf
 import ctypes, shutil
 
-from tmpiler import _tmpile_c, tmp
+from tmpiler import _tmpile_c, _read_code, tmp
 
 is_admin = None
 is_venv = sus.prefix != getattr(sus, "base_prefix", sus.prefix)
@@ -20,6 +21,7 @@ else:
 print(f"{sus.executable}, Venv: {is_venv}, Admin {is_admin}")
 
 #########################################################
+## Do some python work
 
 def Fibon(r, c):
     seq = [0, 1]
@@ -28,28 +30,15 @@ def Fibon(r, c):
     return np.array(seq).reshape((r,c))
 
 result = Fibon(3, 4)
-
 print(result)
 
 #########################################################
+## Do some C work
+## Limititations: exit(0); vs return 0; 
+## As the first would also stop our python process: 
+## But we can use pid os.fork() to circumvent this which would still correctly capture exits.
 
-# Limititations: exit(0); vs return 0; 
-# As the first would also stop our python process: 
-# But we can use pid os.fork() to circumvent this which would still correctly capture exits.
-
-c_code = r'''
-#include <stdio.h>
-#include <stdlib.h>
-
-int run() {
-    const int MAX_BITS = 32;
-    for (int bit = 0; bit < MAX_BITS; bit++)
-        printf("BC: %d\n", bit);
-    printf("Reached bit %d — exit delimiter triggered.\n", MAX_BITS);
-    exit(0); // instead of return 0;
-}
-'''
-
+c_code = _read_code("bitcount.c") 
 exe_path, tmp_dir = _tmpile_c(c_code)
 
 pid = os.fork()
@@ -63,10 +52,11 @@ else:
     exit_code = os.WEXITSTATUS(status)
     print("Child exited with code", exit_code) # but still capture actual return code
 
-# If we do want to use return x; 
-# Then we do not need to fork at all.
+## If we do want to use return x; 
+## Then we do not need to fork at all.
 
 ## Define runtime
+
 #rt = ctypes.CDLL(exe_path)
 #rt.run.restype = ctypes.c_int
 #exit_code = rt.run()

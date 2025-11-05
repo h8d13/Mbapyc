@@ -5,7 +5,12 @@ import shutil
 
 tmp = tf.mkdtemp(dir=os.getcwd())
 
-def _tmpile_c(c_code, work_dir=None, so_name="bitcount.so"):
+def _read_code(c_code, c_file_path="bitcount.c"):
+
+    with open(c_file_path, "r") as f:
+        return f.read()
+
+def _tmpile_c(c_code, work_dir=None, so_name="bitcount.so", flags="-fPIC"):
     """
     Compile C code into a shared library (.so) in a temporary directory.
     
@@ -20,7 +25,7 @@ def _tmpile_c(c_code, work_dir=None, so_name="bitcount.so"):
     with open(c_path, "w") as f:
         f.write(c_code)
 
-    sp.run(["gcc", "-shared", "-fPIC", c_path, "-o", exe_path], check=True)
+    sp.run(["gcc", "-shared", flags, c_path, "-o", exe_path], check=True)
     
     shutil.rmtree(tmp) 
 
