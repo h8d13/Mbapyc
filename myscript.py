@@ -7,7 +7,7 @@ import multiprocessing as mp
 from tmpiler import _envir, _tmpile_c, _read_code, tmp_dir
 
 #########################################################
-_envir()
+_envir() # Check venv/admin
 #########################################################
 ## Do some Python work
 def Fibon(r, c):
@@ -61,4 +61,4 @@ print("Child exited with code", p.exitcode)
 
 ## Clean-up
 shutil.rmtree(tmp_dir) 
-#########################################################
+######################################################### BECAUSE WHY NOT
