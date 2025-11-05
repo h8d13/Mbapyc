@@ -51,7 +51,7 @@ print("Child exited with code", p.exitcode)
 #print("C function returned", exit_code)
 
 ## If you did not change bitcount.c to return 0; 
-## Then you will be left with a temp folder. Becaue part bellow will never be reached.
+## Then you will be left with a tmp folder in cwd. Becaue part bellow will never be reached.
 
 ## Clean-up
 shutil.rmtree(tmp_dir) 
