@@ -1,23 +1,14 @@
 #!/usr/bin/env python3
 #myscript.py
 import numpy as np
-import sys as sus
-import os
-import tempfile as tf
 import ctypes, shutil
+import multiprocessing as mp
 
-from tmpiler import _tmpile_c, _read_code, tmp
+from tmpiler import _envir, _tmpile_c, _read_code, tmp_dir
 
-is_admin = None
-is_venv = sus.prefix != getattr(sus, "base_prefix", sus.prefix)
-if os.getuid() == 0:
-    is_admin = True
-else:
-    is_admin = False
-    #print(f"{is_admin}. Please run elevated.")
-    #sys.exit()
-
-print(f"{sus.executable}, Venv: {is_venv}, Admin {is_admin}")
+#########################################################
+## Prereqs
+_envir()
 
 #########################################################
 ## Do some python work
@@ -41,16 +32,15 @@ c_code = _read_code("bitcount.c")
 
 exe_path, tmp_dir = _tmpile_c(c_code, flags=["-O2", "-fPIC"])
 
-pid = os.fork()
-if pid == 0:
-    # child
+def run_c():
     ctypes.CDLL(exe_path).run()
-    os._exit(0)  # ensure child exits successfully eitherway
-else:
-    # parent
-    _, status = os.waitpid(pid, 0)
-    exit_code = os.WEXITSTATUS(status)
-    print("Child exited with code", exit_code) # but still capture actual return code
+
+p = mp.Process(target=run_c)
+p.start()
+p.join()
+print("Child exited with code", p.exitcode)
+
+shutil.rmtree(tmp_dir) 
 
 ## If we do want to use return x; 
 ## Then we do not need to fork at all.
