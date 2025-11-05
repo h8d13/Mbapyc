@@ -37,38 +37,38 @@ Ru-using existing venv.
 [[ 0  1  1  2]
  [ 3  5  8 13]
  [21 34 55 89]]
-Bit count: 0
-Bit count: 1
-Bit count: 2
-Bit count: 3
-Bit count: 4
-Bit count: 5
-Bit count: 6
-Bit count: 7
-Bit count: 8
-Bit count: 9
-Bit count: 10
-Bit count: 11
-Bit count: 12
-Bit count: 13
-Bit count: 14
-Bit count: 15
-Bit count: 16
-Bit count: 17
-Bit count: 18
-Bit count: 19
-Bit count: 20
-Bit count: 21
-Bit count: 22
-Bit count: 23
-Bit count: 24
-Bit count: 25
-Bit count: 26
-Bit count: 27
-Bit count: 28
-Bit count: 29
-Bit count: 30
-Bit count: 31
+BC: 0
+BC: 1
+BC: 2
+BC: 3
+BC: 4
+BC: 5
+BC: 6
+BC: 7
+BC: 8
+BC: 9
+BC: 10
+BC: 11
+BC: 12
+BC: 13
+BC: 14
+BC: 15
+BC: 16
+BC: 17
+BC: 18
+BC: 19
+BC: 20
+BC: 21
+BC: 22
+BC: 23
+BC: 24
+BC: 25
+BC: 26
+BC: 27
+BC: 28
+BC: 29
+BC: 30
+BC: 31
 Reached bit 32 — exit delimiter triggered.
-child exited with status 0
+Child exited with code 0
 ```
