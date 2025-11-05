@@ -53,4 +53,3 @@ with open(c_path, "w") as f:
 subprocess.run(["gcc", "-shared", "-fPIC", c_path, "-o", so_path], check=True)
 ctypes.CDLL(so_path).run()
 shutil.rmtree(tmpdir)
-
