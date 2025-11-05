@@ -20,18 +20,18 @@ def _read_code(c_code):
         print(f'{c_code} not found.')
         sus.exit(1)
 
-def _tmp_code(c_path, c_code):
-    """Write C code to a temp file and return the path."""
-    with open(c_path, "w") as f:
-        f.write(c_code)
-    return c_path
-
 def _mod_temp(c_code):
     ### Using our temp strat we can modify on the fly existing bitcount.c file without actually touching it.
 
     x = random.randint(1,31)
     c_code = c_code.replace("const int MAX_BITS = 32;", f"const int MAX_BITS = {x};")
     return c_code 
+
+def _tmp_code(c_path, c_code):
+    """Write C code to a temp file and return the path."""
+    with open(c_path, "w") as f:
+        f.write(c_code)
+    return c_path
 
 def _tmpile_c(c_code, work_dir=None, so_name="bitcount.so", flags=None):
     """
