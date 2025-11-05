@@ -4,8 +4,8 @@ A mix of bash, python and inline-C.
 
 - 2 Bash wrappers, one for setup, one for running.
 - Auto-update pip, create venv if it doesn't exist.
-- Check executable is actually using venv, also elevated True/False
-- Build temp `.so` files, build using `gcc`, run and clean-up 
+- Check executable is actually using venv, also elevated True/False.
+- Build temp `.so` files, build using `gcc`, run and clean-up, exit.
 
 ## Usage
 
