@@ -1,18 +1,15 @@
 #!/usr/bin/env python3
 #myscript.py
 import numpy as np
-import ctypes, shutil
+import ctypes, shutil, random
 import multiprocessing as mp
 
 from tmpiler import _envir, _tmpile_c, _read_code, tmp_dir
 
 #########################################################
-## Prereqs
 _envir()
-
 #########################################################
 ## Do some Python work
-
 def Fibon(r, c):
     seq = [0, 1]
     for i in range(r * c - 2):
@@ -31,6 +28,15 @@ print(result)
 in_d="./in"
 c_code = _read_code(f"{in_d}/bitcount.c") 
 ## Load example code
+
+def _mod_temp(c_code):
+    ## Using our temp strat we can modify on-the-fly without actually touching source.
+    x = random.choice(result.flatten())
+    c_code = c_code.replace("const int MAX_BITS = 32;", f"const int MAX_BITS = {x};")
+    return c_code 
+
+c_code = _mod_temp(c_code)
+
 exe_path, tmp_dir = _tmpile_c(c_code, flags=["-O2", "-fPIC"])
 ## Compile to tmp
 def run_c():

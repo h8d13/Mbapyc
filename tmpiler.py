@@ -4,7 +4,7 @@ import sys as sus
 import tempfile as tf
 import subprocess as sp
 import shutil
-import random, uuid
+import uuid, random
 
 tmp_dir = tf.mkdtemp(dir=os.getcwd())
 
@@ -32,12 +32,6 @@ def _read_code(c_code):
         print(f'{c_code} not found.')
         sus.exit(1)
 
-def _mod_temp(c_code):
-    ## Using our temp strat we can modify on-the-fly without actually touching source.
-    x = random.randint(1,31)
-    c_code = c_code.replace("const int MAX_BITS = 32;", f"const int MAX_BITS = {x};")
-    return c_code 
-
 def _tmp_code(c_path, c_code):
     ## Write to temp helper
     with open(c_path, "w") as f:
@@ -55,8 +49,6 @@ def _tmpile_c(c_code, c_filename="bitcount.c", so_name = f"tmp_{uuid.uuid4().hex
 
     c_path = os.path.join(tmp_dir, c_filename)
     exe_path = os.path.join(tmp_dir, so_name)
-
-    c_code = _mod_temp(c_code)
 
     _tmp_code(c_path, c_code)
 
