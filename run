@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+./pya_venv
+
+./.venv/bin/python3 myscript.py

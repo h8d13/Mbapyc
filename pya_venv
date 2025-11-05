@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+dir_ex() {
+    [ -d "$1" ]
+}
+if ! dir_ex ".venv"; then
+    echo "Creating .venv ..."
+    if ! python3 -m venv .venv; then
+        echo "Failed to create .venv"
+        exit 1
+    fi
+    . ./.venv/bin/activate
+    pip3 install --upgrade pip
+    pip3 install -r requirements.txt
+    echo "Done."
+else
+    . ./.venv/bin/activate
+    echo "Ru-using existing venv."
+fi
