@@ -39,15 +39,26 @@ c_code = _mod_temp(c_code)
 
 exe_path, tmp_dir = _tmpile_c(c_code, flags=["-O2", "-fPIC"])
 ## Compile to tmp
+
+## Define ctype run CDLL
 def run_c():
     ctypes.CDLL(exe_path).run()
-## Run it in mp so we dont have to use fork
+
+## Run it in mp so we dont have to use fork (depracted)
+## Define process
 p = mp.Process(target=run_c)
+## Start/join threads
 p.start()
 p.join()
+## Done flag linked to exit code
+done_success = (p.exitcode == 0)
 print("Child exited with code", p.exitcode)
+## Clean-up only on success (useful for debug)
+if done_success:
+    shutil.rmtree(tmp_dir)
 
-## If we do want to use return x; 
+#########################################################
+## If we do want to use return x;
 ## Then we do not need to fork/multiprocess at all.
 ## Define runtime, run and capture exit
 
@@ -56,9 +67,4 @@ print("Child exited with code", p.exitcode)
 #exit_code = rt.run()
 #print("C function returned", exit_code)
 
-## If you did not change bitcount.c to return 0; 
-## Then you will be left with a tmp folder in cwd. Becaue part bellow will never be reached.
-
-## Clean-up
-shutil.rmtree(tmp_dir) 
 ######################################################### BECAUSE WHY NOT

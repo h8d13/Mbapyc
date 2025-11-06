@@ -4,7 +4,8 @@ import sys as sus
 import tempfile as tf
 import subprocess as sp
 import shutil
-import uuid, random
+import uuid
+from contextlib import contextmanager
 
 tmp_dir = tf.mkdtemp(dir=os.getcwd())
 
